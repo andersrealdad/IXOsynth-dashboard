@@ -1,0 +1,5 @@
+[
+  {"agent": "hermes", "role": "leader", "presence": "online", "last_seen": "2026-06-28T08:00:00Z", "area": "pgx"},
+  {"agent": "opus-hermes", "role": "leader", "presence": "online", "last_seen": "2026-06-28T07:52:00Z", "area": "ixonaut/hermes-research"},
+  {"agent": "claude@anderss-MacBook-Pro", "role": "leader", "presence": "online", "last_seen": "2026-06-28T07:58:00Z", "area": "ixosynth-devbox-appliance"}
+]

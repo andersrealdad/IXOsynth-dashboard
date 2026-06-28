@@ -1,0 +1,42 @@
+[
+  {"id": "nb_hrm001", "kind": "notebook", "title": "Hermes — Origin (HRM-001)", "group": "hermes", "build_order": "bo_hrm001", "curated": true,
+    "source": {"backend": "open-notebook", "ref": "notebook:iwiben41hw3ye1xfdjlf", "url": "http://pgx.local:8502/notebook:iwiben41hw3ye1xfdjlf"},
+    "created": "2026-06-26", "show_style": "deepdive",
+    "notes": ["Hermes Deep Dive - FULL (HRM-001)", "Origin Template (v0)", "IxoSynth — Whole Picture (vision brief)", "Hermes Root Mandate (HRM-001)", "Hermes Deep Dive (HRM-001)", "HRM-001-ERRATUM-001", "Gate Record (HRM-001)"],
+    "sources": []},
+  {"id": "nb_hrm002", "kind": "notebook", "title": "Hermes — Build Order (HRM-002)", "group": "hermes", "build_order": "bo_hrm002", "curated": false,
+    "source": {"backend": "open-notebook", "ref": "notebook:3d02ka30y9c8opdil9ob", "url": "http://pgx.local:8502/notebook:3d02ka30y9c8opdil9ob"},
+    "created": "2026-06-26", "show_style": "deepdive", "notes": [], "sources": []},
+  {"id": "nb_hrm003a", "kind": "notebook", "title": "Drone-Defense Alpha (HRM-003)", "group": "defense", "build_order": "bo_hrm003", "curated": true,
+    "source": {"backend": "open-notebook", "ref": "notebook:n98ahr7spen9xz46yj6i", "url": "http://pgx.local:8502/notebook:n98ahr7spen9xz46yj6i"},
+    "created": "2026-06-26", "show_style": "deepdive",
+    "notes": ["The Drone-Defense Explosion (HRM-003)"], "sources": []},
+  {"id": "nb_hrm003b", "kind": "notebook", "title": "Drone-Defense Alpha (HRM-003) · v0", "group": "defense", "build_order": "bo_hrm003", "curated": false,
+    "source": {"backend": "open-notebook", "ref": "notebook:3emnb2n2rm26x3u6eqnh", "url": "http://pgx.local:8502/notebook:3emnb2n2rm26x3u6eqnh"},
+    "created": "2026-06-22", "show_style": "deepdive", "notes": [], "sources": []},
+  {"id": "bk_vision", "kind": "runbook", "title": "Vision Manifesto", "group": "methodology", "build_order": null, "curated": true,
+    "source": {"backend": "paper", "ref": "live/presentation/02-vision-manifesto.html", "url": "https://show.ixobot.com/02-vision-manifesto.html"},
+    "show_style": "magazine", "notes": [], "sources": [],
+    "cover": "https://show.ixobot.com/infographic-architecture.png",
+    "media": [
+      {"type": "image", "url": "https://show.ixobot.com/infographic-architecture.png", "thumb": "https://show.ixobot.com/infographic-architecture.png", "alt": "IxoSynth architecture infographic"},
+      {"type": "video", "url": "https://show.ixobot.com/trailer.mp4", "poster": "https://show.ixobot.com/infographic-architecture.png", "duration_s": 90},
+      {"type": "video", "url": "https://show.ixobot.com/IxoSynth___HRM-001.mp4", "poster": "https://show.ixobot.com/infographic-architecture.png", "duration_s": 0},
+      {"type": "audio", "url": "https://show.ixobot.com/walkthrough.m4a", "title": "Vision walkthrough", "duration_s": 0},
+      {"type": "slideshow", "url": "https://show.ixobot.com/02-vision-manifesto.html", "poster": "https://show.ixobot.com/infographic-architecture.png", "slides": 8}
+    ]},
+  {"id": "art_drone", "kind": "article", "title": "The Drone-Defense Explosion", "group": "defense", "build_order": "bo_hrm003", "curated": true,
+    "source": {"backend": "paper", "ref": "gazette:drone-defense", "url": "https://show.ixobot.com/03-product-landing.html"},
+    "show_style": "magazine", "notes": [], "sources": [],
+    "cover": "https://show.ixobot.com/infographic-architecture.png",
+    "media": [
+      {"type": "image", "url": "https://show.ixobot.com/infographic-architecture.png", "thumb": "https://show.ixobot.com/infographic-architecture.png", "alt": "Counter-drone HPM concept"}
+    ]},
+  {"id": "ds_evito", "kind": "dataset", "title": "Evito Value Scorecard", "group": "business", "build_order": null, "curated": true,
+    "source": {"backend": "paper", "ref": "evito:scorecard", "url": "https://sputnik.ixobot.com/v1/scorecard/NVDA"},
+    "show_style": "data", "notes": [], "sources": [], "cover": null, "media": [],
+    "data": {"kind": "scorecard", "rows": [{"ticker": "NVDA", "score": 86}, {"ticker": "MSFT", "score": 74}, {"ticker": "GOOGL", "score": 71}, {"ticker": "AMD", "score": 62}, {"ticker": "AVGO", "score": 51}]}},
+  {"id": "dv_shape", "kind": "devbook", "title": "The Shape — devbox build technique", "group": "methodology", "build_order": null, "curated": false,
+    "source": {"backend": "paper", "ref": "shape/", "url": "http://gitea.local:3001/Ixosynth/ixosynth-presentations"},
+    "show_style": "lego", "notes": [], "sources": []}
+]

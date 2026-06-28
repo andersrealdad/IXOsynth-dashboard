@@ -1,0 +1,6 @@
+[
+  {"id": "h1", "from": "hermes", "to": "opus-hermes", "task": "ixonaut/hermes-research", "payload": "research lane (leader claim)", "state": "accepted", "at": "2026-06-28T07:40:00Z"},
+  {"id": "h2", "from": "hermes", "to": "claude@anderss-MacBook-Pro", "task": "ixosynth-devbox-appliance", "payload": "build the devbox appliance lane", "state": "accepted", "at": "2026-06-28T07:45:00Z"},
+  {"id": "h3", "from": "hermes", "to": "devbox-pgx", "task": "discovery: locate sources for :8475 + :8765", "payload": "DISCOVERY ONLY, do not modify live files", "state": "done", "at": "2026-06-26T00:00:00Z"},
+  {"id": "h4", "from": "hermes", "to": "claude@anderss-MacBook-Pro", "task": "some-target", "payload": "open work item", "state": "pending", "at": "2026-06-28T07:55:00Z"}
+]

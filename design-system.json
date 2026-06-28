@@ -1,0 +1,107 @@
+{
+  "$comment": "IxoSynth Dashboard — Design DNA Layer (the contract every agent references). Tokens EXTRACTED from Kimi's template 'Connectome Constellation' (https://52pbcykolt4is.ok.kimi.link/) on 2026-06-28. This is the source of truth for color/type/effects; Kimi owns evolving it, all other agents consume it and never deviate without Kimi sign-off.",
+  "source": {
+    "name": "Connectome Constellation — Living Literature Map (Network Neuroscience)",
+    "url": "https://52pbcykolt4is.ok.kimi.link/",
+    "extracted": "2026-06-28"
+  },
+  "stack": {
+    "build": "vite",
+    "ui": "react + tailwind (shadcn/ui token system)",
+    "graph3d": "three.js (WebGLRenderer, PerspectiveCamera, BufferGeometry)",
+    "layout": "d3-force",
+    "note": "2D renderer should match live/presentation/01-steering-wheel-dashboard.html (SVG + LENS); 3D is the new Three.js constellation."
+  },
+  "color": {
+    "brand": {
+      "gold": "#D4A853",
+      "gold-bright": "#e8a820",
+      "gold-soft": "#b07a4a",
+      "navy-sky": "#1A1B3A",
+      "navy-sky-08": "rgba(26,27,58,.08)",
+      "paper": "#faf9f6",
+      "white": "#ffffff"
+    },
+    "schools": {
+      "$comment": "9-tone muted community palette — one hue per group/lens. Map node.group -> a color.",
+      "palette": ["#4a6e8c", "#4b5a8c", "#6e8c5b", "#6e5b8c", "#5a5c7a", "#8c5b5b", "#b07a4a", "#d4a853", "#9ca3af"]
+    },
+    "status": {
+      "ok": "#22a559",
+      "proven": "#22a559",
+      "degraded": "#e8a820",
+      "down": "#d94040",
+      "unknown": "#9ca3af"
+    },
+    "semantic-hsl": {
+      "$comment": "shadcn tokens (space-separated HSL, used as hsl(var(--x))). Light theme as shipped.",
+      "background": "0 0% 100%",
+      "foreground": "240 10% 3.9%",
+      "card": "0 0% 100%",
+      "card-foreground": "240 10% 3.9%",
+      "popover": "0 0% 100%",
+      "primary": "240 5.9% 10%",
+      "primary-foreground": "0 0% 98%",
+      "secondary": "240 4.8% 95.9%",
+      "muted": "240 4.8% 95.9%",
+      "muted-foreground": "240 3.8% 46.1%",
+      "accent": "240 4.8% 95.9%",
+      "destructive": "0 84.2% 60.2%",
+      "border": "240 5.9% 90%",
+      "input": "240 5.9% 90%",
+      "ring": "217.2 91.2% 59.8%",
+      "sidebar-background": "0 0% 98%",
+      "sidebar-foreground": "240 5.3% 26.1%",
+      "sidebar-ring": "217.2 91.2% 59.8%"
+    }
+  },
+  "typography": {
+    "serif": "\"Source Serif Pro\", Georgia, serif",
+    "mono": "\"JetBrains Mono\", \"Courier New\", monospace",
+    "sans": "ui-sans-serif, system-ui, sans-serif"
+  },
+  "effects": {
+    "radius": ".625rem",
+    "glass-blur": "blur(16px)",
+    "shadow-soft": "rgb(0 0 0 / .05)",
+    "shadow": "rgb(0 0 0 / .1)",
+    "ease-smooth": "cubic-bezier(.16, 1, .3, 1)",
+    "ease-bounce": "cubic-bezier(.34, 1.56, .64, 1)",
+    "ease-in-out": "cubic-bezier(.45, .05, .55, .95)"
+  },
+  "show_styles": {
+    "$comment": "LEGO grammar — node.kind decides color (community), icon, AND show_style (the render template used when a node is OPENED). The graph stays one uniform model; only the open-view branches. Same pattern as shape/templates/.",
+    "magazine": {"for": ["runbook", "article", "blog"], "feels": "editorial spread, read like a story (cosmic-deck / gazette); media embedded inline (hero image, video, slideshow)"},
+    "lego": {"for": ["devbook"], "feels": "numbered build steps, exploded parts, snap A->B — instruction booklet"},
+    "deepdive": {"for": ["notebook"], "feels": "open-notebook critique / deep-dive surface; audio overview + sources"},
+    "data": {"for": ["dataset"], "feels": "business data — tables, charts, scorecards (e.g. Evito)"},
+    "card": {"for": ["paper"], "feels": "citation card — title, authors, link"},
+    "status": {"for": ["surface", "claim", "agent"], "feels": "live-probe status panel (the :8475 style)"}
+  },
+  "media": {
+    "$comment": "The CONTENT a library node points to is media-rich (blogs, articles, business data). Each library item carries a `cover` (hero thumb for the constellation node + card) and a `media[]` manifest. The node REFERENCES media by URL — it never embeds bytes. The show_style decides how the media renders when opened.",
+    "cover": "single hero image/poster URL — what the graph node + library card show as a thumbnail",
+    "media_types": ["image", "audio", "video", "slideshow", "animation"],
+    "media_item": {
+      "image": {"type": "image", "url": "...", "thumb": "...", "alt": "..."},
+      "audio": {"type": "audio", "url": "...", "title": "...", "duration_s": 0},
+      "video": {"type": "video", "url": "...", "poster": "...", "duration_s": 0},
+      "slideshow": {"type": "slideshow", "url": "...", "poster": "...", "slides": 0},
+      "animation": {"type": "animation", "url": "...", "format": "lottie|gif|mp4"}
+    }
+  },
+  "registry": {
+    "$comment": "Truth/content split. Library is polymorphic (many backends); registry is Postgres and only INDEXES them. Every node carries source={backend,ref,url} back to its home store. Content stays home; registry references it.",
+    "backends": ["open-notebook", "bookstack", "paper", "live-probe"],
+    "note": "BookStack uses MySQL/MariaDB (NOT Postgres) — index it via its REST API (/api/docs), never merge."
+  },
+  "mapping": {
+    "$comment": "How the constellation template maps onto the IxoSynth Dashboard contract — it IS the same shape.",
+    "paper -> node": "kind=notebook (library item)",
+    "school -> node.group": "community / curated lens",
+    "co-occurrence edge -> edge": "the wiring",
+    "filter by school/year/journal -> view": "the View Menu (curated + algorithmic lens)",
+    "3D constellation -> render.3d": "Three.js + d3-force",
+    "2D steering-wheel -> render.2d": "SVG + LENS (already proven)"
+  }
+}

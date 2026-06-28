@@ -1,0 +1,17 @@
+[
+  {"id": "v_featured", "name": "Featured", "type": "curated", "featured": true,
+    "node_ids": ["nb_hrm001", "nb_hrm003a", "bk_vision"],
+    "desc": "Hand-picked: the developed origin notebook, the live drone-alpha, and the vision deck."},
+  {"id": "v_milestones", "name": "HRM Milestones", "type": "curated", "featured": true,
+    "node_ids": ["bo_hrm001", "nb_hrm001", "bo_hrm002", "nb_hrm002", "bo_hrm003", "nb_hrm003a", "nb_hrm003b"],
+    "desc": "The HRM build-order spine and the notebooks bound to each."},
+  {"id": "v_surfaces", "name": "Live Surfaces", "type": "curated", "featured": false,
+    "node_ids": ["srf_auth", "srf_show", "srf_partner", "srf_vantage"],
+    "desc": "The gated *.ixobot.com surfaces (the :8475 Live System Map, as graph)."},
+  {"id": "v_community", "name": "Communities", "type": "lens", "algorithm": "community",
+    "desc": "Auto-group by community (hermes · defense · surfaces · agents · build · methodology)."},
+  {"id": "v_recent", "name": "Recent", "type": "lens", "algorithm": "recency",
+    "desc": "Most recently created/updated nodes first."},
+  {"id": "v_centrality", "name": "Hubs", "type": "lens", "algorithm": "centrality",
+    "desc": "Highest-degree nodes — the connective tissue (Hermes, the gate, HRM-001)."}
+]

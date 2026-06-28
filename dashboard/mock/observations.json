@@ -1,0 +1,20 @@
+[
+  {"capability": "library", "claim": "The notebook library is live and reachable",
+    "status": "proven", "evidence": "open-notebook API /health healthy; 4 notebooks present",
+    "evidence_ref": "http://pgx.local:5055/api/notebooks", "observed_at": "2026-06-28T08:00:00Z"},
+  {"capability": "surfaces", "claim": "All public surfaces are gated and live",
+    "status": "proven", "evidence": "auth 200; show/partner/vantage return 302 (gated) — probed live",
+    "evidence_ref": "http://station.local:8475/", "observed_at": "2026-06-28T08:00:00Z"},
+  {"capability": "coordination", "claim": "Agents coordinate on a shared board",
+    "status": "proven", "evidence": "1 agent signed in, 3 active claims, 7/7 dispatches produced",
+    "evidence_ref": "http://station.local:8765/", "observed_at": "2026-06-28T08:00:00Z"},
+  {"capability": "evito-scorecard", "claim": "The Evito value scorecard is real (not mock)",
+    "status": "proven", "evidence": "Live fundamental scores stored: NVDA 86 / MSFT 74 / GOOGL 71 / AMD 62 / AVGO 51",
+    "evidence_ref": "https://sputnik.ixobot.com/v1/scorecard/NVDA", "observed_at": "2026-06-28T08:00:00Z"},
+  {"capability": "hermes-orchestration", "claim": "Hermes orchestrates work from the shared Postgres registry",
+    "status": "degraded", "evidence": "Hermes runs on pgx and posts to the board, but is not yet wired to a shared Postgres registry",
+    "evidence_ref": "http://station.local:8765/", "observed_at": "2026-06-28T08:00:00Z"},
+  {"capability": "dashboard-registry", "claim": "The dashboard projects the Postgres registry via /api/observe",
+    "status": "unknown", "evidence": "This dashboard is the surface being built; /api/observe is not live yet (running on mock).",
+    "evidence_ref": null, "observed_at": "2026-06-28T08:00:00Z"}
+]
