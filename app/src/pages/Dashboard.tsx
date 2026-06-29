@@ -4,6 +4,9 @@ import { useData } from '@/hooks/useData';
 import { useAppStore } from '@/store/useAppStore';
 import { PanelShell } from '@/components/PanelShell';
 import NodeDetailPanel from '@/components/NodeDetailPanel';
+import { RegistryLayout } from '@/components/RegistryLayout';
+import { StatusLayout } from '@/components/StatusLayout';
+import { LibraryLayout } from '@/components/LibraryLayout';
 import { getLensEmphasis } from '@/lib/lens';
 import { Eye, Plus, Minus, Maximize2, Activity } from 'lucide-react';
 import type { GraphNode, GraphEdge } from '@/types/graph';
@@ -33,6 +36,9 @@ export default function Dashboard() {
   const { data: partsData } = useData('participants');
   const selectedNode = useAppStore(s => s.selectedNode);
   const setSelectedNode = useAppStore(s => s.setSelectedNode);
+  const layoutMode = useAppStore(s => s.layoutMode);
+  const leftPanelOpen = useAppStore(s => s.leftPanelOpen);
+  const rightPanelOpen = useAppStore(s => s.rightPanelOpen);
   const activeCuratedView = useAppStore(s => s.activeCuratedView);
   const activeLens = useAppStore(s => s.activeLens);
   const setActiveCuratedView = useAppStore(s => s.setActiveCuratedView);
@@ -252,6 +258,24 @@ export default function Dashboard() {
         </g>
       </svg>
 
+      {/* Alternate layouts (Library / Registry / Status) — same nodes, between the panels */}
+      {layoutMode !== 'graph' && (
+        <div
+          className="absolute top-0 bottom-0 z-10"
+          style={{ left: leftPanelOpen ? 320 : 48, right: rightPanelOpen ? 340 : 48, background: '#131428' }}
+        >
+          {layoutMode === 'library' && (
+            <LibraryLayout nodes={visibleNodes} selectedId={selectedNode?.id} onSelect={n => setSelectedNode(n)} />
+          )}
+          {layoutMode === 'registry' && (
+            <RegistryLayout nodes={visibleNodes} selectedId={selectedNode?.id} onSelect={n => setSelectedNode(n)} />
+          )}
+          {layoutMode === 'status' && (
+            <StatusLayout nodes={visibleNodes} selectedId={selectedNode?.id} onSelect={n => setSelectedNode(n)} />
+          )}
+        </div>
+      )}
+
       {/* Left Panel */}
       <div className="absolute left-0 top-0 bottom-0">
         <PanelShell side="left" title="Views & Lens" icon={<Eye size={14} />}>
@@ -362,7 +386,8 @@ export default function Dashboard() {
         </PanelShell>
       </div>
 
-      {/* Zoom controls */}
+      {/* Zoom controls (graph layout only) */}
+      {layoutMode === 'graph' && (
       <div className="absolute bottom-4 right-4 flex flex-col gap-1 z-30">
         <button onClick={handleZoomIn} className="w-8 h-8 flex items-center justify-center rounded-md bg-navy-800 border border-navy-600 text-text-secondary hover:text-text-primary hover:bg-navy-700 transition-colors">
           <Plus size={14} />
@@ -374,6 +399,7 @@ export default function Dashboard() {
           <Maximize2 size={14} />
         </button>
       </div>
+      )}
 
       {/* Detail Panel — uses NodeDetailPanel component */}
       {selectedNode && graphData && (

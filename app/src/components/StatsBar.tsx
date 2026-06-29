@@ -1,5 +1,6 @@
 import { useData } from '@/hooks/useData';
 import { useAppStore } from '@/store/useAppStore';
+import { LayoutSwitcher } from './LayoutSwitcher';
 import { PanelLeftClose, PanelRightClose, PanelLeftOpen, PanelRightOpen } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -44,6 +45,8 @@ export function StatsBar() {
 
       {/* Right: Controls */}
       <div className="flex items-center gap-3">
+        {/* Layout switcher — Graph / Library / Registry / Status over the same nodes */}
+        <LayoutSwitcher />
         {/* 2D/3D toggle */}
         <div className="flex items-center rounded-md p-0.5" style={{ background: 'rgba(26,27,58,0.8)', border: '1px solid rgba(74,75,130,0.4)' }}>
           <button onClick={() => setViewMode('2d')} className={`px-3 py-1 rounded text-xs font-medium transition-all ${viewMode === '2d' ? 'bg-navy-700 text-text-primary' : 'text-text-tertiary hover:text-text-secondary'}`}>2D</button>

@@ -4,10 +4,13 @@ import type { CuratedView, LensView } from '@/types/views';
 
 type ViewMode = '2d' | '3d';
 type PanelSide = 'left' | 'right';
+export type LayoutMode = 'graph' | 'library' | 'registry' | 'status';
 
 interface AppState {
   selectedNode: GraphNode | null;
   setSelectedNode: (node: GraphNode | null) => void;
+  layoutMode: LayoutMode;
+  setLayoutMode: (mode: LayoutMode) => void;
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   leftPanelOpen: boolean;
@@ -23,6 +26,8 @@ interface AppState {
 export const useAppStore = create<AppState>((set, get) => ({
   selectedNode: null,
   setSelectedNode: (node) => set({ selectedNode: node }),
+  layoutMode: 'graph',
+  setLayoutMode: (mode) => set({ layoutMode: mode }),
   viewMode: '2d',
   setViewMode: (mode) => set({ viewMode: mode }),
   leftPanelOpen: true,
