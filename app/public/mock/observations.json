@@ -1,0 +1,16 @@
+{
+  "observations": [
+    {"id": "obs-001", "timestamp": "2026-06-28T05:42:12Z", "node_id": "evito-alpha", "kind": "signal", "message": "MSFT 15m alpha signal triggered — confidence 0.94", "severity": "info"},
+    {"id": "obs-002", "timestamp": "2026-06-28T05:38:01Z", "node_id": "build-evito-alpha", "kind": "build", "message": "Build #892 completed — deployed to pgx.local", "severity": "success"},
+    {"id": "obs-003", "timestamp": "2026-06-28T05:35:44Z", "node_id": "notebooklm-agent", "kind": "sync", "message": "HRM-001 notebook synced — 3 new sources ingested", "severity": "info"},
+    {"id": "obs-004", "timestamp": "2026-06-28T05:30:22Z", "node_id": "analysis-agent", "kind": "alert", "message": "NVDA momentum divergence detected on 1h timeframe", "severity": "warning"},
+    {"id": "obs-005", "timestamp": "2026-06-28T05:28:00Z", "node_id": "build-notebooklm", "kind": "error", "message": "Build failed — notebooklm API rate limit exceeded", "severity": "error"},
+    {"id": "obs-006", "timestamp": "2026-06-28T05:22:15Z", "node_id": "okcomputer", "kind": "deploy", "message": "OK Computer v2.4.1 live on netlify", "severity": "success"},
+    {"id": "obs-007", "timestamp": "2026-06-28T05:18:33Z", "node_id": "dataset", "kind": "update", "message": "Dataset hub updated — 14 new price series added", "severity": "info"},
+    {"id": "obs-008", "timestamp": "2026-06-28T05:15:00Z", "node_id": "vibecode-agent", "kind": "build", "message": "Triggered build-samsung via pipeline hook", "severity": "info"},
+    {"id": "obs-009", "timestamp": "2026-06-28T05:10:47Z", "node_id": "nb_nvd001", "kind": "analysis", "message": "NVIDIA supply chain analysis complete — 47 pages", "severity": "info"},
+    {"id": "obs-010", "timestamp": "2026-06-28T05:05:22Z", "node_id": "runbook", "kind": "procedure", "message": "Auto-scaling triggered — pgx-research → 4 instances", "severity": "warning"},
+    {"id": "obs-011", "timestamp": "2026-06-28T05:00:00Z", "node_id": "article", "kind": "ingest", "message": "12 new articles ingested from gitea.local/feeds", "severity": "info"},
+    {"id": "obs-012", "timestamp": "2026-06-28T04:55:18Z", "node_id": "devbook", "kind": "update", "message": "DevBook API docs regenerated — 23 endpoints documented", "severity": "info"}
+  ]
+}

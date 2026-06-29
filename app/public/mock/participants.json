@@ -1,0 +1,11 @@
+{
+  "participants": [
+    {"id": "p-001", "name": "anders", "role": "architect", "node_id": "pgx-research", "active": true, "since": "2026-06-28T00:00:00Z"},
+    {"id": "p-002", "name": "notebooklm-svc", "role": "agent", "node_id": "notebooklm-agent", "active": true, "since": "2026-06-28T04:00:00Z"},
+    {"id": "p-003", "name": "vibecoder", "role": "agent", "node_id": "vibecode-agent", "active": true, "since": "2026-06-28T03:30:00Z"},
+    {"id": "p-004", "name": "analysis-bot", "role": "agent", "node_id": "analysis-agent", "active": true, "since": "2026-06-28T02:00:00Z"},
+    {"id": "p-005", "name": "deploy-pipeline", "role": "system", "node_id": "build-evito-alpha", "active": false, "since": "2026-06-28T05:38:01Z"},
+    {"id": "p-006", "name": "dataset-sync", "role": "system", "node_id": "dataset", "active": true, "since": "2026-06-28T01:00:00Z"},
+    {"id": "p-007", "name": "observer", "role": "monitor", "node_id": "runbook", "active": true, "since": "2026-06-28T00:00:00Z"}
+  ]
+}

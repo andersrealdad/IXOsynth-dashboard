@@ -1,0 +1,11 @@
+{
+  "handoffs": [
+    {"id": "ho-001", "from_node": "notebooklm-agent", "to_node": "nb_hrm001", "status": "completed", "timestamp": "2026-06-28T05:35:00Z", "payload_type": "notebook_sync"},
+    {"id": "ho-002", "from_node": "vibecode-agent", "to_node": "build-evito-alpha", "status": "completed", "timestamp": "2026-06-28T05:20:00Z", "payload_type": "build_trigger"},
+    {"id": "ho-003", "from_node": "analysis-agent", "to_node": "dataset", "status": "in_progress", "timestamp": "2026-06-28T05:15:00Z", "payload_type": "data_feed"},
+    {"id": "ho-004", "from_node": "build-evito-alpha", "to_node": "evito-alpha", "status": "completed", "timestamp": "2026-06-28T05:38:00Z", "payload_type": "deploy"},
+    {"id": "ho-005", "from_node": "dataset", "to_node": "nb_nvd001", "status": "queued", "timestamp": "2026-06-28T05:10:00Z", "payload_type": "data_feed"},
+    {"id": "ho-006", "from_node": "article", "to_node": "notebooklm-agent", "status": "completed", "timestamp": "2026-06-28T05:00:00Z", "payload_type": "reference"},
+    {"id": "ho-007", "from_node": "nb_sam001", "to_node": "build-samsung", "status": "failed", "timestamp": "2026-06-28T04:45:00Z", "payload_type": "build_trigger"}
+  ]
+}

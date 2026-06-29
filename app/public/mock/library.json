@@ -1,0 +1,86 @@
+{
+  "items": [
+    {
+      "id": "lib-001",
+      "title": "EVITO Alpha — Signal Analysis",
+      "show_style": "data",
+      "group": 1,
+      "duration_s": 1420,
+      "media": [
+        {"url": "/mock/library-poster-1.jpg", "thumb": "/mock/library-poster-1.jpg", "poster": "/mock/library-poster-1.jpg", "duration_s": 1420}
+      ],
+      "data": {"rows": [{"signal": "MSFT 15m alpha", "confidence": 0.94, "sharpe": 2.1, "status": "active"}, {"signal": "NVDA momentum", "confidence": 0.87, "sharpe": 1.8, "status": "active"}, {"signal": "META reversal", "confidence": 0.72, "sharpe": 1.3, "status": "stale"}]}
+    },
+    {
+      "id": "lib-002",
+      "title": "Network Graph — Q4 Topology",
+      "show_style": "card",
+      "group": 2,
+      "duration_s": 360,
+      "media": [
+        {"url": "/mock/library-poster-2.jpg", "thumb": "/mock/library-poster-2.jpg", "poster": "/mock/library-poster-2.jpg", "duration_s": 360}
+      ]
+    },
+    {
+      "id": "lib-003",
+      "title": "NotebookLM Pipeline Logs",
+      "show_style": "deepdive",
+      "group": 4,
+      "duration_s": 2880,
+      "media": [
+        {"url": "/mock/library-poster-3.jpg", "thumb": "/mock/library-poster-3.jpg", "poster": "/mock/library-poster-3.jpg", "duration_s": 2880}
+      ]
+    },
+    {
+      "id": "lib-004",
+      "title": "Neural Architecture Viz",
+      "show_style": "magazine",
+      "group": 2,
+      "duration_s": 540,
+      "media": [
+        {"url": "/mock/library-poster-4.jpg", "thumb": "/mock/library-poster-4.jpg", "poster": "/mock/library-poster-4.jpg", "duration_s": 540}
+      ]
+    },
+    {
+      "id": "lib-005",
+      "title": "Samsung Edge AI Brief",
+      "show_style": "magazine",
+      "group": 6,
+      "duration_s": 890,
+      "media": [
+        {"url": "/mock/node-cover-analysis.jpg", "thumb": "/mock/node-cover-analysis.jpg", "poster": "/mock/magazine-hero-nb-mrf.jpg", "duration_s": 890}
+      ],
+      "data": {"rows": [{"metric": "Edge latency", "value": "12ms", "target": "<20ms", "status": "pass"}, {"metric": "Model size", "value": "47MB", "target": "<50MB", "status": "pass"}, {"metric": "Accuracy", "value": "94.2%", "target": ">90%", "status": "pass"}]}
+    },
+    {
+      "id": "lib-006",
+      "title": "Build Pipeline Status",
+      "show_style": "lego",
+      "group": 3,
+      "duration_s": 120,
+      "media": [
+        {"url": "/mock/node-cover-vibecode.jpg", "thumb": "/mock/node-cover-vibecode.jpg", "poster": "/mock/node-cover-vibecode.jpg", "duration_s": 120}
+      ]
+    },
+    {
+      "id": "lib-007",
+      "title": "PGX Research Archive",
+      "show_style": "data",
+      "group": 1,
+      "duration_s": 2150,
+      "media": [
+        {"url": "/mock/node-cover-pgx-research.jpg", "thumb": "/mock/node-cover-pgx-research.jpg", "poster": "/mock/node-cover-pgx-research.jpg", "duration_s": 2150}
+      ]
+    },
+    {
+      "id": "lib-008",
+      "title": "OK Computer Generative Output",
+      "show_style": "card",
+      "group": 1,
+      "duration_s": 675,
+      "media": [
+        {"url": "/mock/node-cover-okcomputer.jpg", "thumb": "/mock/node-cover-okcomputer.jpg", "poster": "/mock/node-cover-okcomputer.jpg", "duration_s": 675}
+      ]
+    }
+  ]
+}

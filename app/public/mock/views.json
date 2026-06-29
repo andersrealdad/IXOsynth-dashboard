@@ -1,0 +1,39 @@
+{
+  "curated": [
+    {
+      "id": "all-nodes",
+      "name": "Full Network",
+      "description": "All 18 nodes in the IXOsynth graph",
+      "node_ids": ["pgx-research", "evito-alpha", "evito-web", "okcomputer", "notebooklm-agent", "vibecode-agent", "analysis-agent", "build-evito-alpha", "build-evito-web", "build-okcomputer", "build-samsung", "build-notebooklm", "nb_hrm001", "nb_nvd001", "nb_mrf001", "nb_sam001", "runbook", "article", "dataset", "devbook"]
+    },
+    {
+      "id": "surfaces-only",
+      "name": "Surfaces",
+      "description": "All surface nodes — the visible products",
+      "node_ids": ["pgx-research", "evito-alpha", "evito-web", "okcomputer"]
+    },
+    {
+      "id": "active-builds",
+      "name": "Active Builds",
+      "description": "Nodes related to currently active build pipelines",
+      "node_ids": ["build-evito-alpha", "build-okcomputer", "vibecode-agent", "notebooklm-agent", "evito-alpha", "okcomputer"]
+    },
+    {
+      "id": "notebook-cluster",
+      "name": "Notebook Cluster",
+      "description": "All notebook nodes and their feeding agents",
+      "node_ids": ["nb_hrm001", "nb_nvd001", "nb_mrf001", "nb_sam001", "notebooklm-agent", "analysis-agent", "dataset"]
+    },
+    {
+      "id": "wiring-layer",
+      "name": "Wiring Layer",
+      "description": "Runbook, articles, datasets, and devbook",
+      "node_ids": ["runbook", "article", "dataset", "devbook"]
+    }
+  ],
+  "lens": [
+    {"id": "community", "name": "Community", "algorithm": "louvain", "description": "Groups nodes by community detection"},
+    {"id": "recency", "name": "Recency", "algorithm": "modified_time", "description": "Sorts by most recently active"},
+    {"id": "centrality", "name": "Centrality", "algorithm": "betweenness", "description": "Highlights most connected nodes"}
+  ]
+}

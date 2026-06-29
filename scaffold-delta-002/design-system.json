@@ -1,0 +1,114 @@
+{
+  "name": "IXOsynth Dashboard",
+  "version": "1.0.0",
+  "colors": {
+    "background": {
+      "primary": "#1A1B3A",
+      "secondary": "#0F1020",
+      "tertiary": "#252650"
+    },
+    "accent": {
+      "gold": "#D4A853",
+      "goldLight": "#E8C87A",
+      "goldDark": "#B08D3F",
+      "goldGlow": "rgba(212, 168, 83, 0.3)"
+    },
+    "text": {
+      "primary": "#F0F0F5",
+      "secondary": "#A0A3B8",
+      "muted": "#6B6E8A"
+    },
+    "glass": {
+      "light": "rgba(255, 255, 255, 0.04)",
+      "medium": "rgba(255, 255, 255, 0.06)",
+      "heavy": "rgba(255, 255, 255, 0.08)",
+      "border": "rgba(255, 255, 255, 0.08)"
+    },
+    "community": {
+      "hermes": "#D4A853",
+      "defense": "#6B8E9F",
+      "methodology": "#8F7DB8",
+      "business": "#7BA87B",
+      "surfaces": "#C97B7B",
+      "agents": "#7B9BC9",
+      "build": "#C9A87B",
+      "default": "#7BC9B8"
+    }
+  },
+  "typography": {
+    "heading": {
+      "family": "'Source Serif Pro', Georgia, serif",
+      "weights": [400, 600, 700]
+    },
+    "stats": {
+      "family": "'JetBrains Mono', 'Fira Code', monospace",
+      "weight": 400
+    },
+    "body": {
+      "family": "system-ui, -apple-system, sans-serif",
+      "weight": 400
+    }
+  },
+  "show_styles": {
+    "magazine": {
+      "desc": "editorial spread — read like a story (cosmic-deck / gazette feel)",
+      "cardIntensity": "heavy",
+      "showMedia": true,
+      "showMetrics": false,
+      "labelDetail": "full"
+    },
+    "lego": {
+      "desc": "numbered build steps, exploded parts, snap A→B — instruction booklet",
+      "cardIntensity": "medium",
+      "showMedia": false,
+      "showMetrics": true,
+      "labelDetail": "category"
+    },
+    "deepdive": {
+      "desc": "open-notebook critique / deep-dive surface",
+      "cardIntensity": "heavy",
+      "showMedia": false,
+      "showMetrics": true,
+      "labelDetail": "full"
+    },
+    "data": {
+      "desc": "business data (scorecard, tables, charts)",
+      "cardIntensity": "medium",
+      "showMedia": false,
+      "showMetrics": true,
+      "labelDetail": "category"
+    },
+    "card": {
+      "desc": "citation card (title, authors, link)",
+      "cardIntensity": "light",
+      "showMedia": false,
+      "showMetrics": false,
+      "labelDetail": "none"
+    },
+    "status": {
+      "desc": "live-probe status panel (the :8475 style)",
+      "cardIntensity": "light",
+      "showMedia": false,
+      "showMetrics": true,
+      "labelDetail": "category"
+    }
+  },
+  "spacing": {
+    "xs": "4px",
+    "sm": "8px",
+    "md": "16px",
+    "lg": "24px",
+    "xl": "32px",
+    "xxl": "48px"
+  },
+  "borderRadius": {
+    "sm": "6px",
+    "md": "12px",
+    "lg": "16px",
+    "xl": "24px"
+  },
+  "shadows": {
+    "card": "0 4px 24px rgba(0, 0, 0, 0.3)",
+    "glow": "0 0 40px rgba(212, 168, 83, 0.15)"
+  }
+}
