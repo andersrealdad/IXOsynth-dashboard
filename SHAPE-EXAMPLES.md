@@ -54,3 +54,9 @@ immersive full-bleed editorial world.
 
 OPEN QUESTION (owner decides from examples, not locked): is this (a) the premium tier of `magazine`,
 or (b) a new show_style `feature`/`scrollytelling`? Leaning (b). No enum added until decided.
+
+### RESOLUTION (owner, 2026-06-29)
+Shein style is NOT a new show_style — it is the **flagship tier of `article` / `magazine`**, and it is
+the **promote-to-publish** content that gets surfaced inside **ixos-pr** (gazette/conviction) via the
+`gazette_import` seam. Keep the modules (Bull/Bear, Risk Heat Map, Competitor matrix, timeline) as
+components of the premium magazine renderer. No new enum.
