@@ -37,3 +37,20 @@ Each = a library node with `source` (backref) + `show_style`:
 - BCI     → kind `dataset`,  show_style `data`
 - biblio  → a `graph` that POPULATES observe.nodes/edges + drives the lenses
 They double as (a) Kimi template references and (b) real first library content (use instead of demo data).
+
+## `feature` (premium scrollytelling) ← Shein Deep-Dive — OPEN QUESTION
+A flagship long-form investment deep-dive (richer than `magazine`). Stack: Playfair Display + Inter,
+framer-motion scroll animation, IntersectionObserver scroll-driven sections, Three.js (3D/globe), a timeline.
+Sections shipped: Bull case · Bear case · Competitive Intelligence + Competitor matrix · Risk Heat Map ·
+Revenue Trajectory & Valuation History · The Supply Chain Machine · The Financial Engine · The Marketplace
+Pivot · IPO Timeline & Blockers · Geographic revenue split · Conclusion.
+
+Reusable shape-modules (build these regardless of naming): **Bull/Bear blocks, Risk Heat Map,
+Competitor matrix, IPO/event Timeline, scroll-driven sections.**
+
+DESIGN NOTE: it has its OWN editorial palette (light cream `#fffbeb`/`#fafaf9` + Playfair), NOT the
+dashboard gold/navy. Lesson: the dashboard is the SHELL; an opened flagship node can be its own
+immersive full-bleed editorial world.
+
+OPEN QUESTION (owner decides from examples, not locked): is this (a) the premium tier of `magazine`,
+or (b) a new show_style `feature`/`scrollytelling`? Leaning (b). No enum added until decided.
