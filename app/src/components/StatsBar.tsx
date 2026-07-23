@@ -1,14 +1,18 @@
 import { useData } from '@/hooks/useData';
 import { useAppStore } from '@/store/useAppStore';
 import { LayoutSwitcher } from './LayoutSwitcher';
-import { PanelLeftClose, PanelRightClose, PanelLeftOpen, PanelRightOpen } from 'lucide-react';
+import { PanelLeftClose, PanelRightClose, PanelLeftOpen, PanelRightOpen, LibraryBig } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export function StatsBar() {
   const { data: graphData } = useData('graph');
   const { data: obsData } = useData('observations');
   const { viewMode, setViewMode, leftPanelOpen, rightPanelOpen, togglePanel } = useAppStore();
   const [time, setTime] = useState(new Date());
+  const navigate = useNavigate();
+  const location = useLocation();
+  const onLibraryPage = location.pathname === '/library';
 
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 1000);
@@ -47,6 +51,16 @@ export function StatsBar() {
       <div className="flex items-center gap-3">
         {/* Layout switcher — Graph / Library / Registry / Status over the same nodes */}
         <LayoutSwitcher />
+        {/* Media Library page — notebooks, artifacts and the Files tab */}
+        <button
+          onClick={() => navigate(onLibraryPage ? '/' : '/library')}
+          title="Media Library"
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all ${onLibraryPage ? 'bg-navy-700 text-gold' : 'text-text-tertiary hover:text-text-secondary'}`}
+          style={{ background: onLibraryPage ? undefined : 'rgba(26,27,58,0.8)', border: '1px solid rgba(74,75,130,0.4)' }}
+        >
+          <LibraryBig size={13} />
+          <span className="hidden md:inline">Media</span>
+        </button>
         {/* 2D/3D toggle */}
         <div className="flex items-center rounded-md p-0.5" style={{ background: 'rgba(26,27,58,0.8)', border: '1px solid rgba(74,75,130,0.4)' }}>
           <button onClick={() => setViewMode('2d')} className={`px-3 py-1 rounded text-xs font-medium transition-all ${viewMode === '2d' ? 'bg-navy-700 text-text-primary' : 'text-text-tertiary hover:text-text-secondary'}`}>2D</button>
