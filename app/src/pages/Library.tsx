@@ -4,6 +4,7 @@ import { Search, FileX, X } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import LibraryCard from '@/components/LibraryCard';
 import LibraryDetailModal from '@/components/LibraryDetailModal';
+import FilesView from '@/components/FilesView';
 import type { LibraryItem } from '@/types/library';
 import type { ShowStyle } from '@/types/graph';
 
@@ -23,6 +24,7 @@ export default function Library() {
   const [styleFilter, setStyleFilter] = useState<string>('all');
   const [groupFilter, setGroupFilter] = useState<number | 'all'>('all');
   const [selectedItem, setSelectedItem] = useState<LibraryItem | null>(null);
+  const [tab, setTab] = useState<'media' | 'files'>('media');
 
   const items = libraryData?.items ?? [];
 
@@ -85,6 +87,23 @@ export default function Library() {
         </div>
       </div>
 
+      {/* Tabs: Media | Files */}
+      <div className="flex gap-1 mb-6 border-b border-navy-600">
+        {(['media', 'files'] as const).map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase transition-all border-b-2 -mb-px ${tab === t ? 'text-gold border-gold' : 'text-text-tertiary border-transparent hover:text-text-secondary'}`}
+          >
+            {t === 'media' ? 'Media' : 'Files'}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'files' ? (
+        <FilesView />
+      ) : (
+      <>
       {/* Filter Bar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         {/* Search */}
@@ -175,6 +194,8 @@ export default function Library() {
             <LibraryCard key={item.id} item={item} index={i} onClick={() => setSelectedItem(item)} />
           ))}
         </div>
+      )}
+      </>
       )}
 
       {/* Detail Modal */}

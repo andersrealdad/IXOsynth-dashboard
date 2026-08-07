@@ -5,6 +5,7 @@ import type { ViewsData } from '@/types/views';
 import type { ObservationsData } from '@/types/observation';
 import type { ParticipantsData } from '@/types/participant';
 import type { HandoffsData } from '@/types/handoff';
+import type { FilesData } from '@/types/file';
 
 export const DATA_BASE = './mock';
 
@@ -15,6 +16,7 @@ export const ENDPOINTS = {
   observations: `${DATA_BASE}/observations.json`,
   participants: `${DATA_BASE}/participants.json`,
   handoffs: `${DATA_BASE}/handoffs.json`,
+  files: `${DATA_BASE}/files.json`,
 } as const;
 
 type EndpointMap = {
@@ -24,6 +26,7 @@ type EndpointMap = {
   observations: ObservationsData;
   participants: ParticipantsData;
   handoffs: HandoffsData;
+  files: FilesData;
 };
 
 export function useData<K extends keyof EndpointMap>(key: K) {
