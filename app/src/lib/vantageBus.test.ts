@@ -1,8 +1,21 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { isAllowedOrigin, parseSelectEvent, createRelay, parseAllowlist, deskFrameUrl } from './vantageBus';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  isAllowedOrigin,
+  parseSelectEvent,
+  createRelay,
+  parseAllowlist,
+  deskFrameUrl,
+  frameOrigin,
+} from './vantageBus';
+
+// Production posture by default: tests that need the DEV-only "*" wildcard stub it explicitly.
+beforeEach(() => {
+  vi.stubEnv('DEV', false);
+});
 
 afterEach(() => {
   vi.unstubAllEnvs();
+  vi.restoreAllMocks();
 });
 
 describe('isAllowedOrigin', () => {
@@ -90,10 +103,55 @@ describe('parseSelectEvent', () => {
     expect(parseSelectEvent({ ...valid, prediction_id: 12 })).toBeNull();
   });
 
-  it('strips unknown extra fields from the parsed event', () => {
-    const parsed = parseSelectEvent({ ...valid, __proto__x: 'junk', extra: { a: 1 } });
+  it('strips unknown extra fields and a JSON __proto__ key without polluting Object.prototype', () => {
+    const wire = JSON.parse(
+      '{"__proto__":{"polluted":1},"type":"vantage:select","snapshot_id":"snap_1","tickers":["NVDA"],"extra":{"a":1}}',
+    );
+    const parsed = parseSelectEvent(wire);
     expect(parsed).not.toBeNull();
     expect(Object.keys(parsed!)).toEqual(['type', 'snapshot_id', 'tickers']);
+    expect(Object.getPrototypeOf(parsed)).toBe(Object.prototype);
+    expect('polluted' in parsed!).toBe(false);
+    expect((Object.prototype as Record<string, unknown>).polluted).toBeUndefined();
+  });
+
+  it('accepts an empty tickers array (deselect-all)', () => {
+    expect(parseSelectEvent({ ...valid, tickers: [] })).toEqual({
+      type: 'vantage:select', snapshot_id: 'snap_1', tickers: [],
+    });
+  });
+
+  it('rejects sparse arrays and null/undefined entries in tickers', () => {
+    const sparse: string[] = ['NVDA'];
+    sparse[2] = 'MSFT'; // index 1 is a hole
+    expect(parseSelectEvent({ ...valid, tickers: sparse })).toBeNull();
+    expect(parseSelectEvent({ ...valid, tickers: ['NVDA', null] })).toBeNull();
+    expect(parseSelectEvent({ ...valid, tickers: ['NVDA', undefined] })).toBeNull();
+  });
+
+  it('caps tickers at 25 entries', () => {
+    const max = Array.from({ length: 25 }, (_, i) => `T${i}`);
+    expect(parseSelectEvent({ ...valid, tickers: max })?.tickers).toHaveLength(25);
+    expect(parseSelectEvent({ ...valid, tickers: [...max, 'T25'] })).toBeNull();
+  });
+
+  it('rejects tickers outside /^[A-Z0-9.-]{1,16}$/i and uppercases the rest', () => {
+    expect(parseSelectEvent({ ...valid, tickers: ['brk.b', 'rds-a'] })?.tickers).toEqual(['BRK.B', 'RDS-A']);
+    expect(parseSelectEvent({ ...valid, tickers: [''] })).toBeNull();
+    expect(parseSelectEvent({ ...valid, tickers: ['A'.repeat(17)] })).toBeNull();
+    expect(parseSelectEvent({ ...valid, tickers: ['NV DA'] })).toBeNull();
+    expect(parseSelectEvent({ ...valid, tickers: ['<script>'] })).toBeNull();
+    expect(parseSelectEvent({ ...valid, tickers: ['NVDA\n'] })).toBeNull();
+  });
+
+  it('caps snapshot_id at 128 characters', () => {
+    expect(parseSelectEvent({ ...valid, snapshot_id: 's'.repeat(128) })).not.toBeNull();
+    expect(parseSelectEvent({ ...valid, snapshot_id: 's'.repeat(129) })).toBeNull();
+  });
+
+  it('caps prediction_id at 128 characters', () => {
+    expect(parseSelectEvent({ ...valid, prediction_id: 'p'.repeat(128) })?.prediction_id).toBe('p'.repeat(128));
+    expect(parseSelectEvent({ ...valid, prediction_id: 'p'.repeat(129) })).toBeNull();
   });
 });
 
@@ -205,8 +263,56 @@ describe('createRelay', () => {
     );
 
     off();
-    emit(valid, DESK, a.frame.contentWindow);
+    emit({ ...valid, snapshot_id: 'snap_2' }, DESK, a.frame.contentWindow);
     expect(seen).toHaveBeenCalledTimes(1);
+    relay.dispose();
+  });
+
+  it('replay() is a no-op before any event has been relayed', () => {
+    const a = makeFrame(`${DESK}/?panel=predictions`);
+    const relay = createRelay({ allowlist: [DESK], frames: () => [a.frame] });
+
+    expect(() => relay.replay(a.frame)).not.toThrow();
+    expect(a.post).not.toHaveBeenCalled();
+    relay.dispose();
+  });
+
+  it('replay() re-posts the last relayed sanitized event to the given frame only, at that frame origin', () => {
+    const a = makeFrame(`${DESK}/?floor=signal&panel=predictions`);
+    const b = makeFrame(`${DESK}/?floor=signal&panel=graph`);
+    const c = makeFrame(`${DESK}/?floor=knowledge`);
+    const relay = createRelay({ allowlist: [DESK], frames: () => [a.frame, b.frame, c.frame] });
+
+    emit({ ...valid, prediction_id: 'pred_2', junk: 1 }, DESK, a.frame.contentWindow);
+    b.post.mockClear();
+    c.post.mockClear();
+
+    relay.replay(c.frame);
+
+    expect(c.post).toHaveBeenCalledTimes(1);
+    expect(c.post).toHaveBeenCalledWith(
+      { type: 'vantage:select', snapshot_id: 'snap_1', tickers: ['NVDA', 'MSFT'], prediction_id: 'pred_2' },
+      DESK,
+    );
+    expect(a.post).not.toHaveBeenCalled();
+    expect(b.post).not.toHaveBeenCalled();
+    relay.dispose();
+  });
+
+  it('replay() does nothing for a frame without a resolvable origin and nothing after a dropped event', () => {
+    const a = makeFrame(`${DESK}/?panel=predictions`);
+    const noSrc = document.createElement('iframe');
+    document.body.appendChild(noSrc);
+    const noSrcPost = vi.spyOn(noSrc.contentWindow!, 'postMessage');
+    const relay = createRelay({ allowlist: [DESK], frames: () => [a.frame, noSrc] });
+
+    emit(valid, 'https://evil.example.com', a.frame.contentWindow); // dropped: not allowlisted
+    relay.replay(a.frame);
+    expect(a.post).not.toHaveBeenCalled();
+
+    emit(valid, DESK, a.frame.contentWindow);
+    relay.replay(noSrc);
+    expect(noSrcPost).not.toHaveBeenCalled();
     relay.dispose();
   });
 
@@ -221,6 +327,42 @@ describe('createRelay', () => {
 
     expect(() => emit(valid, DESK, a.frame.contentWindow)).not.toThrow();
     expect(noSrcPost).not.toHaveBeenCalled();
+    relay.dispose();
+  });
+
+  it('fans out the same event only once even when a second frame re-emits it (echo guard)', () => {
+    const a = makeFrame(`${DESK}/?floor=signal&panel=predictions`);
+    const b = makeFrame(`${DESK}/?floor=signal&panel=graph`);
+    const c = makeFrame(`${DESK}/?floor=knowledge`);
+    const seen = vi.fn();
+    const relay = createRelay({ allowlist: [DESK], frames: () => [a.frame, b.frame, c.frame] });
+    relay.onSelect(seen);
+
+    emit(valid, DESK, a.frame.contentWindow);
+    emit(valid, DESK, b.frame.contentWindow); // the desk in b echoes what it just received
+
+    expect(a.post).not.toHaveBeenCalled();
+    expect(b.post).toHaveBeenCalledTimes(1);
+    expect(c.post).toHaveBeenCalledTimes(1);
+    expect(seen).toHaveBeenCalledTimes(1);
+    relay.dispose();
+  });
+
+  it('dedupes on snapshot_id + ticker set + prediction_id; a changed field is a new event', () => {
+    const a = makeFrame(`${DESK}/?panel=predictions`);
+    const b = makeFrame(`${DESK}/?panel=graph`);
+    const relay = createRelay({ allowlist: [DESK], frames: () => [a.frame, b.frame] });
+
+    emit(valid, DESK, a.frame.contentWindow);
+    emit({ ...valid, tickers: ['MSFT', 'NVDA'] }, DESK, a.frame.contentWindow); // same set, reordered
+    expect(b.post).toHaveBeenCalledTimes(1);
+
+    emit({ ...valid, prediction_id: 'pred_1' }, DESK, a.frame.contentWindow);
+    expect(b.post).toHaveBeenCalledTimes(2);
+    emit({ ...valid, snapshot_id: 'snap_2' }, DESK, a.frame.contentWindow);
+    expect(b.post).toHaveBeenCalledTimes(3);
+    emit({ ...valid, snapshot_id: 'snap_2', tickers: [] }, DESK, a.frame.contentWindow);
+    expect(b.post).toHaveBeenCalledTimes(4);
     relay.dispose();
   });
 
@@ -262,8 +404,38 @@ describe('parseAllowlist', () => {
     expect(parseAllowlist(undefined, undefined)).toEqual([]);
   });
 
-  it('drops entries that are not parseable origins', () => {
-    expect(parseAllowlist('not a url, https://ok.example.com', undefined)).toEqual(['https://ok.example.com']);
+  it('drops entries that are not parseable origins and warns once about them', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(parseAllowlist('not a url, https://ok.example.com, also bad', undefined)).toEqual(['https://ok.example.com']);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0].join(' ')).toContain('not a url');
+    expect(warn.mock.calls[0].join(' ')).toContain('also bad');
+  });
+
+  it('does not warn when every entry parses', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    parseAllowlist('https://a.example.com, https://b.example.com', undefined);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('warns that "*" is ignored outside DEV, but keeps it in the list', () => {
+    vi.stubEnv('DEV', false);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(parseAllowlist('*, https://a.example.com', undefined)).toEqual(['*', 'https://a.example.com']);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0].join(' ')).toMatch(/\*/);
+  });
+
+  it('does not warn about "*" in DEV', () => {
+    vi.stubEnv('DEV', true);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    parseAllowlist('*', undefined);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('dedupes entries that normalize to the same origin', () => {
+    expect(parseAllowlist('https://a.example.com, https://a.example.com/, https://a.example.com/x?y=1', undefined))
+      .toEqual(['https://a.example.com']);
   });
 });
 
@@ -286,5 +458,26 @@ describe('deskFrameUrl', () => {
   it('overrides a floor already present on the base rather than duplicating it', () => {
     expect(deskFrameUrl('https://desk.example.com/?floor=signal', { floor: 'knowledge' }))
       .toBe('https://desk.example.com/?floor=knowledge');
+  });
+
+  it('resolves a relative base against the host page instead of throwing', () => {
+    expect(deskFrameUrl('/desk/', { floor: 'finance' }))
+      .toBe(`${window.location.origin}/desk/?floor=finance`);
+  });
+
+  it('throws for a base that cannot be resolved at all', () => {
+    expect(() => deskFrameUrl('http://', { floor: 'signal' })).toThrow();
+  });
+});
+
+describe('frameOrigin', () => {
+  it('resolves a relative src against the host page origin', () => {
+    const frame = document.createElement('iframe');
+    frame.setAttribute('src', '/desk/?floor=signal');
+    expect(frameOrigin(frame)).toBe(window.location.origin);
+  });
+
+  it('returns null for a frame without src', () => {
+    expect(frameOrigin(document.createElement('iframe'))).toBeNull();
   });
 });

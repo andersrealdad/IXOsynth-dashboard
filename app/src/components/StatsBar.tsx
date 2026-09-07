@@ -56,7 +56,7 @@ export function StatsBar() {
         <button
           onClick={() => navigate(onVantagePage ? '/' : '/vantage')}
           title="Vantage Pro"
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all `}
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all ${onVantagePage ? 'bg-navy-700 text-gold' : 'text-text-tertiary hover:text-text-secondary'}`}
           style={{ background: onVantagePage ? undefined : 'rgba(26,27,58,0.8)', border: '1px solid rgba(74,75,130,0.4)' }}
         >
           <ChartCandlestick size={13} />

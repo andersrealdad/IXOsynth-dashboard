@@ -16,13 +16,26 @@ import {
   deskFrameUrl,
   parseAllowlist,
   type Floor,
+  type Relay,
   type SelectEvent,
 } from '@/lib/vantageBus';
 
 // Host-side config. The host never fetches anything itself: the desk inside
 // each iframe talks to the FastAPI gateway directly.
-const DESK_URL = import.meta.env.VITE_VANTAGE_DESK_URL?.trim() || undefined;
-const ALLOWLIST = parseAllowlist(import.meta.env.VITE_VANTAGE_DESK_ORIGINS, DESK_URL);
+//
+// The desk URL is resolved once, against the host page, so a relative value
+// (`/desk/`) works and an unparseable one degrades to the "not configured"
+// card instead of throwing inside render.
+const DESK: { url: string; reason?: undefined } | { url?: undefined; reason: string } = (() => {
+  const raw = import.meta.env.VITE_VANTAGE_DESK_URL?.trim();
+  if (!raw) return { reason: 'VITE_VANTAGE_DESK_URL is not set.' };
+  try {
+    return { url: new URL(raw, window.location.href).toString() };
+  } catch {
+    return { reason: `VITE_VANTAGE_DESK_URL is not a valid URL: ${JSON.stringify(raw)}` };
+  }
+})();
+const ALLOWLIST = parseAllowlist(import.meta.env.VITE_VANTAGE_DESK_ORIGINS, DESK.url);
 
 const FLOORS: { id: Floor; label: string }[] = [
   { id: 'signal', label: 'Signal' },
@@ -43,19 +56,27 @@ export default function VantagePro() {
   const [lastSelect, setLastSelect] = useState<{ event: SelectEvent; at: Date } | null>(null);
   const [epoch, setEpoch] = useState(0);
   const framesRef = useRef<HTMLDivElement>(null);
+  const relayRef = useRef<Relay | null>(null);
 
   useEffect(() => {
-    if (!DESK_URL) return;
+    if (!DESK.url) return;
     const relay = createRelay({
       allowlist: ALLOWLIST,
       frames: () => Array.from(framesRef.current?.querySelectorAll('iframe') ?? []),
     });
+    relayRef.current = relay;
     const off = relay.onSelect((event) => setLastSelect({ event, at: new Date() }));
     return () => {
       off();
       relay.dispose();
+      relayRef.current = null;
     };
   }, []);
+
+  // Frames that finish loading after a selection (slow graph panel, "Reload
+  // desk frames") missed the fan-out: a message posted before navigation
+  // completes lands on about:blank and is dropped by the target-origin check.
+  const onFrameLoad = (frame: HTMLIFrameElement) => relayRef.current?.replay(frame);
 
   const setFloor = (next: string) => {
     if (!isFloor(next)) return;
@@ -64,7 +85,7 @@ export default function VantagePro() {
     setParams(nextParams, { replace: true });
   };
 
-  if (!DESK_URL) return <NotConfigured />;
+  if (DESK.url === undefined) return <NotConfigured reason={DESK.reason} />;
 
   return (
     <Tabs value={floor} onValueChange={setFloor} className="absolute inset-0 flex flex-col gap-0 bg-navy-900">
@@ -99,28 +120,37 @@ export default function VantagePro() {
       <div ref={framesRef} key={epoch} className="flex-1 min-h-0 flex flex-col">
         <TabsContent value="signal" forceMount className="flex-1 min-h-0 data-[state=inactive]:hidden">
           <div className="grid h-full grid-cols-[minmax(300px,2fr)_3fr] gap-px" style={{ background: HAIRLINE }}>
-            <DeskFrame title="Signal — predictions" src={deskFrameUrl(DESK_URL, { floor: 'signal', panel: 'predictions' })} />
-            <DeskFrame title="Signal — graph" src={deskFrameUrl(DESK_URL, { floor: 'signal', panel: 'graph' })} />
+            <DeskFrame title="Signal — predictions" src={deskFrameUrl(DESK.url, { floor: 'signal', panel: 'predictions' })} onLoad={onFrameLoad} />
+            <DeskFrame title="Signal — graph" src={deskFrameUrl(DESK.url, { floor: 'signal', panel: 'graph' })} onLoad={onFrameLoad} />
           </div>
         </TabsContent>
         <TabsContent value="finance" forceMount className="flex-1 min-h-0 data-[state=inactive]:hidden">
-          <DeskFrame title="Finance" src={deskFrameUrl(DESK_URL, { floor: 'finance' })} />
+          <DeskFrame title="Finance" src={deskFrameUrl(DESK.url, { floor: 'finance' })} onLoad={onFrameLoad} />
         </TabsContent>
         <TabsContent value="knowledge" forceMount className="flex-1 min-h-0 data-[state=inactive]:hidden">
-          <DeskFrame title="Knowledge" src={deskFrameUrl(DESK_URL, { floor: 'knowledge' })} />
+          <DeskFrame title="Knowledge" src={deskFrameUrl(DESK.url, { floor: 'knowledge' })} onLoad={onFrameLoad} />
         </TabsContent>
       </div>
     </Tabs>
   );
 }
 
-function DeskFrame({ title, src }: { title: string; src: string }) {
+function DeskFrame({
+  title,
+  src,
+  onLoad,
+}: {
+  title: string;
+  src: string;
+  onLoad: (frame: HTMLIFrameElement) => void;
+}) {
   return (
     <iframe
       title={`Vantage Pro — ${title}`}
       src={src}
       sandbox={IFRAME_SANDBOX}
       referrerPolicy="no-referrer"
+      onLoad={(e) => onLoad(e.currentTarget)}
       className="block w-full h-full border-0 bg-navy-900"
     />
   );
@@ -190,7 +220,7 @@ function SensorsMenu({ onReload }: { onReload: () => void }) {
   );
 }
 
-function NotConfigured() {
+function NotConfigured({ reason }: { reason: string }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center p-8 bg-navy-900">
       <Card className="max-w-lg w-full bg-navy-800 text-text-primary border" style={{ borderColor: HAIRLINE }}>
@@ -201,6 +231,7 @@ function NotConfigured() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
+          <p className="font-mono text-[11px] text-status-failed break-all">{reason}</p>
           <div className="rounded p-3 font-mono text-[11px] leading-6 bg-navy-900 border" style={{ borderColor: HAIRLINE }}>
             <div><span className="text-gold">VITE_VANTAGE_DESK_URL</span><span className="text-text-tertiary">=https://desk.example.com</span></div>
             <div><span className="text-gold">VITE_VANTAGE_DESK_ORIGINS</span><span className="text-text-tertiary">=https://desk.example.com</span></div>
