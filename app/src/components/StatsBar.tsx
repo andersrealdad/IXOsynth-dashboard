@@ -1,7 +1,7 @@
 import { useData } from '@/hooks/useData';
 import { useAppStore } from '@/store/useAppStore';
 import { LayoutSwitcher } from './LayoutSwitcher';
-import { PanelLeftClose, PanelRightClose, PanelLeftOpen, PanelRightOpen, LibraryBig } from 'lucide-react';
+import { PanelLeftClose, PanelRightClose, PanelLeftOpen, PanelRightOpen, LibraryBig, ChartCandlestick } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ export function StatsBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const onLibraryPage = location.pathname === '/library';
+  const onVantagePage = location.pathname === '/vantage';
 
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 1000);
@@ -51,6 +52,16 @@ export function StatsBar() {
       <div className="flex items-center gap-3">
         {/* Layout switcher — Graph / Library / Registry / Status over the same nodes */}
         <LayoutSwitcher />
+        {/* Vantage Pro — hosts the embeddable desk (Signal / Finance / Knowledge) in iframes */}
+        <button
+          onClick={() => navigate(onVantagePage ? '/' : '/vantage')}
+          title="Vantage Pro"
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all ${onVantagePage ? 'bg-navy-700 text-gold' : 'text-text-tertiary hover:text-text-secondary'}`}
+          style={{ background: onVantagePage ? undefined : 'rgba(26,27,58,0.8)', border: '1px solid rgba(74,75,130,0.4)' }}
+        >
+          <ChartCandlestick size={13} />
+          <span className="hidden md:inline">Vantage Pro</span>
+        </button>
         {/* Media Library page — notebooks, artifacts and the Files tab */}
         <button
           onClick={() => navigate(onLibraryPage ? '/' : '/library')}
